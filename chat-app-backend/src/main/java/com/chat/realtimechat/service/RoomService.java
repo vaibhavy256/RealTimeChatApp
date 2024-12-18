@@ -6,6 +6,7 @@ import com.chat.realtimechat.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class RoomService {
         }
         Room newRoom = new Room();
         newRoom.setRoomId(roomId);  // Set the unique room ID
-        newRoom.setUserNames(userName);
+        newRoom.setUserNames(Collections.singletonList(userName));
         return roomRepository.save(newRoom);
     }
 
@@ -39,7 +40,7 @@ public class RoomService {
                 log.warn("Room with ID {} does not exists",roomId);
                 return null;
             }
-            room.setUserNames(userName);
+            room.addUser(userName);
             return roomRepository.save(room);
     }
 

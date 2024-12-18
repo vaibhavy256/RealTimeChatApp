@@ -20,8 +20,11 @@ import java.util.Set;
 public class Room {
     private String id;
     private String roomId;
-    // @ElementCollection
-    private String userNames;
+    @ElementCollection
+    private List<String> userNames = new ArrayList<>();
     private List<Messages> messages=new ArrayList<>();
-
+    // Method to add a user to the room
+    public void addUser(String userName) {
+        this.userNames.add(userName);
+    }
 }
