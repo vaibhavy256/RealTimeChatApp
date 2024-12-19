@@ -1,11 +1,14 @@
 package com.chat.realtimechat.repository;
 
 import com.chat.realtimechat.entity.Room;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-public interface RoomRepository extends JpaRepository<Room, String> {
+@Repository
+public interface RoomRepository extends JpaRepository<Room, Long> {
     Room findByRoomId(String roomId);
 
-    Room findByUserName(String userName);
+    @Query("SELECT r FROM Room r WHERE :userNames MEMBER OF r.userNames")
+    Room findByUserName(String userNames);
 }

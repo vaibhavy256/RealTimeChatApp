@@ -1,31 +1,30 @@
 package com.chat.realtimechat.service;
 
 import com.chat.realtimechat.entity.Room;
-import com.chat.realtimechat.exception.NoRoomFound;
 import com.chat.realtimechat.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @Slf4j
 public class RoomService {
+    @Autowired
     RoomRepository roomRepository;
 
-    public RoomService(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(Room.class);
 
     public Room createRoom(String  roomId,String userName){
         if(roomRepository.findByRoomId(roomId)!=null){
-            log.warn("Room already exists");
+            logger.warn("Room {} not exists", roomId);
             return null;
         }
         if (roomRepository.findByUserName(userName) != null) {
-            log.warn("Username {} is already in use", userName);
+            logger.warn("Username {} is already in use", userName);
             return null; // Indicate that the username is taken
         }
         Room newRoom = new Room();
@@ -37,11 +36,21 @@ public class RoomService {
     public Room joinRoom(String roomId,String userName){
             Room room=roomRepository.findByRoomId(roomId);
             if (room==null){
-                log.warn("Room with ID {} does not exists",roomId);
+                logger.warn("Room with ID {} does not exists",roomId);
                 return null;
             }
             room.addUser(userName);
             return roomRepository.save(room);
+    }
+
+    public Room getMessages(String roomId){
+        Room room=roomRepository.findByRoomId(roomId);
+        if (room==null){
+            return null;
+        }
+        else {
+            return room;
+        }
     }
 
 
