@@ -11,10 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.spi.LocaleNameProvider;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
 @Entity
 public class Messages {
     @Id
@@ -27,6 +24,9 @@ public class Messages {
         this.content = content;
         this.sender = sender;
         this.timeStamp= LocalDateTime.now();
+    }
+
+    public Messages() {
     }
 
     public String getContent() {
