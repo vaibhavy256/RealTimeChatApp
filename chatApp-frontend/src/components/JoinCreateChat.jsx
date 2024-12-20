@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import chatIcon from "../assets/speech-bubble.png"
 import toast from "react-hot-toast";
+import { createRoomAPi } from "../services/RoomService";
 
 const JoinCreateChat = () => {
 
@@ -34,7 +35,7 @@ const JoinCreateChat = () => {
         if(validateForm()){
             console.log(detail);
             try{
-                const response=await createRoom(detail.roomId,detail.userName)
+                const response=await createRoomAPi(detail.roomId,detail.userName)
                 console.log(response);
                 toast.success("Room created successfully!!");
                 joinChat();
@@ -42,6 +43,7 @@ const JoinCreateChat = () => {
             catch (error){
                 console.log(error);
                 console.log("Error in creating room");
+                toast.error("Failed to create room. Please try again.");
                 
             }
         }

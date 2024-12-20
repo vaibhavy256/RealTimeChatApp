@@ -21,7 +21,7 @@ public class Room {
 
     private String roomId;
     @ElementCollection
-    private List<String> userNames = new ArrayList<>();
+    private List<String> userName = new ArrayList<>();
 
     @ElementCollection
     private List<Messages> messages=new ArrayList<>();
@@ -43,11 +43,11 @@ public class Room {
     }
 
     public List<String> getUserNames() {
-        return userNames;
+        return userName;
     }
 
     public void setUserNames(List<String> userNames) {
-        this.userNames = userNames;
+        this.userName = userNames;
     }
 
     public List<Messages> getMessages() {
@@ -60,6 +60,6 @@ public class Room {
 
     // Method to add a user to the room
     public void addUser(String userNames) {
-        this.userNames.add(userNames);
+        this.userName.add(userNames);
     }
 }

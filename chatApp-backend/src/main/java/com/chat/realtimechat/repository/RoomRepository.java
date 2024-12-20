@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Room findByRoomId(String roomId);
 
-    @Query("SELECT r FROM Room r WHERE :userNames MEMBER OF r.userNames")
-    Room findByUserName(String userNames);
+    @Query("SELECT r FROM Room r WHERE :userName MEMBER OF r.userName")
+    Room findByUserName(String userName);
 }
