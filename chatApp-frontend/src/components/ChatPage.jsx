@@ -3,6 +3,7 @@ import { IoSend } from "react-icons/io5";
 import { FaFileUpload } from "react-icons/fa";
 import useChatContext from "../context/ChatContext"
 import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
 import toast from "react-hot-toast";
 import {baseURL} from "../config/AxiosHelper"
 import { useNavigate } from "react-router";
@@ -63,10 +64,19 @@ const ChatPage = () => {
           });
         });
       }
+      if (connected) {
+        connectWebSocket();
+      }
     },[roomId]);
 
 
-    //
+    //send message handle
+    const sendMessage=async ()=>{
+      //when you are connected and stompClient is there 
+      if(stompClient && connected && input.trim()){
+        console.log(input)
+      }
+    }
 
 
     
@@ -128,6 +138,10 @@ const ChatPage = () => {
     <div className="fixed bottom-4 w-full h-16 ">
         <div className="h-full  pr-10 gap-4 flex items-center justify-between rounded-full w-1/2 mx-auto dark:bg-gray-800">
         <input
+            value={input}
+            onChange={(e)=>{
+              setInput(e.target.value);
+            }}
             type="text"
             placeholder="Type your message here..."
             className=" w-full  dark:border-gray-600 b dark:bg-gray-800  px-5 py-2 rounded-full h-full focus:outline-none  "
@@ -135,7 +149,7 @@ const ChatPage = () => {
            <button className="dark:bg-purple-600 h-10 w-10  flex   justify-center items-center rounded-full">
                 <FaFileUpload size={20}/>
            </button>
-           <button className="dark:bg-orange-600 h-10 w-10  flex justify-center items-center rounded-full">
+           <button onClick={sendMessage} className="dark:bg-orange-600 h-10 w-10  flex justify-center items-center rounded-full">
                 <IoSend size={20} />
            </button>
         </div>  
