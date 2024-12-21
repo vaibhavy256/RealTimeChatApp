@@ -39,6 +39,10 @@ public class RoomService {
                 logger.warn("Room with ID {} does not exists",roomId);
                 return null;
             }
+//            if (room.getUserNames().contains(userName)) {
+//                logger.info("User {} is already in the room {}", userName, roomId);
+//                return room; // Return the room without saving it again
+//            }
             room.addUser(userName);
             return roomRepository.save(room);
     }

@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 import chatIcon from "../assets/speech-bubble.png"
 import toast from "react-hot-toast";
-import { createRoomAPi } from "../services/RoomService";
+import { createRoomAPi, joinRoomApi } from "../services/RoomService";
+import useChatContext from "../context/ChatContext";
+import { useNavigate } from "react-router";
+
+
 
 const JoinCreateChat = () => {
 
     const[detail, setDetail]=useState({
         roomId:"",
         userName:""
-    })
+    });
+
+    const {roomId, userName, setRoomId, setCurrentUser,setConnected }=useChatContext();
+    const navigate=useNavigate();
+
+
     function handleFormInputChange(event){
         setDetail({
             ...detail,
@@ -24,9 +33,25 @@ const JoinCreateChat = () => {
             return true;
     }
 
-    function joinChat(){
+    async function joinChat(){
         if(validateForm()){
             console.log(detail);
+            try{
+                const room=await joinRoomApi(detail.roomId,detail.userName);
+                toast.success("Room Joined...");
+                setCurrentUser(detail.userName);
+                setRoomId(detail.roomId);
+                setConnected(true);
+                navigate("/chat");
+            }
+            catch (error){
+                if(error.status==404){
+                    toast.error(error.response.data)
+                }else{
+                    toast.error("Error in joining room ");
+                }
+                console.log(error);
+            }
         }
 
     }
@@ -38,7 +63,11 @@ const JoinCreateChat = () => {
                 const response=await createRoomAPi(detail.roomId,detail.userName)
                 console.log(response);
                 toast.success("Room created successfully!!");
-                joinChat();
+                setCurrentUser(detail.userName);
+                setRoomId(response.roomId);
+                setConnected(true)
+                //forward to chat page
+                navigate("/chat")
             }
             catch (error) {
                 console.log(error);

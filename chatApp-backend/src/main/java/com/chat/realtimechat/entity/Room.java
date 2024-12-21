@@ -60,8 +60,10 @@ public class Room {
         this.messages = messages;
     }
 
-    // Method to add a user to the room
+    // Method to add a user to the room and also avoiding adding redundant names
     public void addUser(String userNames) {
-        this.userName.add(userNames);
+        if (!userName.contains(userName)) {
+            userName.add(userNames);
+        }
     }
 }

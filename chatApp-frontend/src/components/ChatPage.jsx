@@ -1,10 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { FaFileUpload } from "react-icons/fa";
-
+import useChatContext from "../context/ChatContext"
+import SockJS from "sockjs-client";
+import toast from "react-hot-toast";
+import {baseURL} from "../config/AxiosHelper"
+import { useNavigate } from "react-router";
 
 
 const ChatPage = () => {
+    const{roomId, currentUser,connected}=useChatContext();
+    console.log(roomId);
+    console.log(connected);
+    console.log(currentUser);
+
+    const navigate = useNavigate();
+    useEffect(()=>{
+      if(!connected){
+        navigate("/"); 
+      }
+    },[connected, roomId,currentUser]);
     const [messages, setMessages]=useState([
         {
             content: "Hello",
@@ -25,8 +40,36 @@ const ChatPage = () => {
     const inputRef=useRef(null)
     const chatBoxRef=useRef(null)
     const [stompClient, setStompClient]=useState(null);
-    const [roomId,setRoomId]=useState("");
-    const [currentUser]=useState("vaibhav")
+
+
+    //page init
+    //need to load the messages 
+
+    //need to init the stompclient 
+    //subscribe
+    useEffect(()=> {
+      const connectWebSocket= ()=>{
+        const sock=new SockJS(`${baseURL}/chat`);
+        const client=Stomp.over(sock);
+        client.connect({},()=>{
+
+          setStompClient(client);
+
+          toast.success("connected");
+          client.subscribe(`/topic/room/${roomId}`,(message)=>{
+          console.log(message);
+          const newMessage=JSON.parse(message.body);
+          setMessages((prev)=> [...prev,newMessage]);
+          });
+        });
+      }
+    },[roomId]);
+
+
+    //
+
+
+    
   return (
   <div className=" ">
     <header className="dark:border-gray-700 h-20 fixed w-full dark:bg-gray-800 py-5 shdow flex justify-around items-center">
