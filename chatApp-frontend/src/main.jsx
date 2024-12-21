@@ -11,7 +11,10 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Toaster />
+      <ChatProvider>
       <AppRoutes/>
+      </ChatProvider>
+      
     </BrowserRouter>
   </StrictMode>
 );

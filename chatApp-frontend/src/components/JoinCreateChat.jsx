@@ -40,12 +40,14 @@ const JoinCreateChat = () => {
                 toast.success("Room created successfully!!");
                 joinChat();
             }
-            catch (error){
+            catch (error) {
                 console.log(error);
-                console.log("Error in creating room");
-                toast.error("Failed to create room. Please try again.");
-                
-            }
+                if (error.status == 409) {
+                  toast.error(error.response.data);
+                } else {
+                  toast("Error in creating room");
+                }
+              }
         }
     }
 

@@ -26,6 +26,8 @@ public class Room {
     @ElementCollection
     private List<Messages> messages=new ArrayList<>();
 
+
+
     public Long getId() {
         return id;
     }

@@ -18,14 +18,14 @@ public class RoomService {
 
     private static final Logger logger = LoggerFactory.getLogger(Room.class);
 
-    public Room createRoom(String  roomId,String userName){
+    public Object createRoom(String  roomId,String userName){
         if(roomRepository.findByRoomId(roomId)!=null){
-            logger.warn("Room {} not exists", roomId);
-            return null;
+            logger.warn("Room {} exists already", roomId);
+            return "Room "+ roomId + " exist already !!";
         }
         if (roomRepository.findByUserName(userName) != null) {
             logger.warn("Username {} is already in use", userName);
-            return null; // Indicate that the username is taken
+            return "Username "+ userName +" is already in use"; // Indicate that the username is taken
         }
         Room newRoom = new Room();
         newRoom.setRoomId(roomId);  // Set the unique room ID

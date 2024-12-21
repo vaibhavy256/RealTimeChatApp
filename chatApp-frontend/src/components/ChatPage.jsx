@@ -13,7 +13,12 @@ const ChatPage = () => {
         {
             content: "Hello",
             sender:"vaibhav y"
-        }
+        },
+        {
+          content: "Hello",
+          sender:"vaibhav y"
+      }
+  
     
     ]);
     const [input,setInput]=useState("");
