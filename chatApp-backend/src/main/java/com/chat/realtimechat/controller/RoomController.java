@@ -1,11 +1,15 @@
 package com.chat.realtimechat.controller;
 
+import com.chat.realtimechat.entity.Messages;
 import com.chat.realtimechat.entity.Room;
 import com.chat.realtimechat.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -37,12 +41,13 @@ public class RoomController {
     }
 
     @GetMapping("/messages/{roomId}")
-    public ResponseEntity<?> getMessages(@PathVariable String roomId) {
-        Room room = roomService.getMessages(roomId);
+    public ResponseEntity<List<?>> getMessages(@PathVariable String roomId) {
+        List<Messages> room = roomService.getMessages(roomId);
         if (room == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Room with " + roomId + "not Exists");
+                    .body(Collections.singletonList("Room with " + roomId + "not Exists"));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(room.getMessages());
+        System.out.println("MEssages are "+room.toString());
+        return ResponseEntity.ok(room);
     }
 }

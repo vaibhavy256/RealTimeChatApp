@@ -7,8 +7,8 @@ import { Stomp } from "@stomp/stompjs";
 import toast from "react-hot-toast";
 import {baseURL} from "../config/AxiosHelper"
 import { useNavigate } from "react-router";
-import { CgUserRemove } from "react-icons/cg";
-
+import { getMessagesApi} from "../services/RoomService";
+import { timeAgo } from "../config/helper";
 
 const ChatPage = () => {
     const{roomId, currentUser,connected,setConnected,
@@ -27,6 +27,30 @@ const ChatPage = () => {
     const [stompClient, setStompClient]=useState(null);
     //page init
     //need to load the messages 
+    useEffect(()=>{
+     async function loadMessages(){
+      try{
+        const messages=await getMessagesApi(roomId);
+        setMessages(messages);
+      }
+      catch(error){
+
+      }
+     }
+     if(connected){
+      loadMessages();
+     }
+    },[])
+
+    //scroll down
+    useEffect(()=>{
+      if(chatBoxRef.current){
+        chatBoxRef.current.scroll({
+          top:chatBoxRef.current.scrollHeight,
+          behavior:"smooth",
+        })
+      }
+    },[messages]);
 
     //need to init the stompclient 
     //subscribe
@@ -61,12 +85,20 @@ const ChatPage = () => {
           content:input,
           roomId:roomId,
         };
+        console.log(roomId);
         stompClient.send(`/app/sendMessage/${roomId}`,{},JSON.stringify(message),{});
+
         setInput("");
       }
     };
 
-
+    function handleLogout(){
+      stompClient.disconnect();
+      setConnected(false);
+      setCurrentUser("")
+      setRoomId("")
+      navigate("/")
+    }
     
   return (
   <div className=" ">
@@ -74,18 +106,18 @@ const ChatPage = () => {
         {/*room name */}
     <div>
         <h1 className="text-xl font-semibold">  
-            Room: <span>Family room</span>
+            Room: <span>{roomId}</span>
         </h1>
     </div>
     {/*username container*/}
     <div>
         <h1 className="text-xl font-semibold">  
-            User Name: <span>Vaibhav Yeotikar</span>
+            User : <span>{currentUser}</span>
         </h1>
     </div>
     {/*button: leave room */}
     <div>
-        <button className="dark:bg-red-500 dark:hover:bg-red-600 px-3 py-2 rounded-full">
+        <button onClick={handleLogout} className="dark:bg-red-500 dark:hover:bg-red-600 px-3 py-2 rounded-full">
             Leave Room
         </button>
     </div>
@@ -114,6 +146,9 @@ const ChatPage = () => {
                 <div className="flex flex-col gap-1">
                   <p className="text-sm font-bold">{message.sender}</p>
                   <p>{message.content}</p>
+                  <p className="text-xs text-gray-400">
+                    {timeAgo(message.timeStamp)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -129,6 +164,11 @@ const ChatPage = () => {
             value={input}
             onChange={(e)=>{
               setInput(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
             }}
             type="text"
             placeholder="Type your message here..."

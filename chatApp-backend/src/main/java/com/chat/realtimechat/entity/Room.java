@@ -1,5 +1,6 @@
 package com.chat.realtimechat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,9 +27,9 @@ public class Room {
     @ElementCollection
     private List<String> userName = new ArrayList<>();
 
-    @OneToMany(mappedBy = "room",fetch = FetchType.EAGER)
-    private List<Messages> messages=new ArrayList<>();
-
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonBackReference
+    private List<Messages> messages = new ArrayList<>();
 
 
     public Long getId() {
@@ -68,5 +69,14 @@ public class Room {
         if (!userName.contains(userName)) {
             userName.add(userNames);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", roomId='" + roomId + '\'' +
+                ", messages=" + messages +
+                '}';
     }
 }

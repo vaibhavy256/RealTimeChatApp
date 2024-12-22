@@ -10,3 +10,8 @@ export const joinRoomApi=async(roomId,userName) => {
     return response.data;
 }
 
+export const getMessagesApi=async(roomId) =>{
+    const response=await httpClient.get(`/api/messages/${roomId}`);
+    return response.data;
+}
+

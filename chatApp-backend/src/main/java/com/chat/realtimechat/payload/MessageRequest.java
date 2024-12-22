@@ -1,5 +1,9 @@
 package com.chat.realtimechat.payload;
 
+import com.chat.realtimechat.entity.Room;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jdk.jfr.DataAmount;
 import lombok.*;
 
@@ -11,6 +15,10 @@ public class MessageRequest {
     private String sender;
     private String roomId;
     private LocalDateTime messageTime;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
+
 
     public MessageRequest() {
     }
@@ -52,5 +60,22 @@ public class MessageRequest {
 
     public void setMessageTime(LocalDateTime messageTime) {
         this.messageTime = messageTime;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageRequest{" +
+                "content='" + content + '\'' +
+                ", sender='" + sender + '\'' +
+                ", messageTime=" + messageTime +
+                '}';
     }
 }

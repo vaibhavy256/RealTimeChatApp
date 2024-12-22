@@ -27,9 +27,11 @@ public class ChatController {
     public Messages sendMessage(
             @DestinationVariable String roomId,
             @RequestBody MessageRequest request){
-        Room room=roomRepository.findByRoomId(request.getRoomId());
-
+        System.out.println(roomId+" "+request.toString());
+        Room room=roomRepository.findByRoomId(roomId);
+        System.out.println(room);
         Messages messages=new Messages();
+        messages.setRoom(room);
         messages.setContent(request.getContent());
         messages.setSender(request.getSender());
         messages.setTimeStamp(LocalDateTime.now());

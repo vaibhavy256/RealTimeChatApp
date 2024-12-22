@@ -1,5 +1,6 @@
 package com.chat.realtimechat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class Messages {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
+    @JsonBackReference
     private Room room;
 
     public Messages(String content, String sender) {
@@ -34,6 +36,22 @@ public class Messages {
     }
 
     public Messages() {
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getContent() {
@@ -58,5 +76,15 @@ public class Messages {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Messages{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", sender='" + sender + '\'' +
+                ", timeStamp=" + timeStamp +
+                '}';
     }
 }
