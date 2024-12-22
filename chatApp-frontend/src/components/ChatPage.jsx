@@ -99,7 +99,20 @@ const ChatPage = () => {
       setRoomId("")
       navigate("/")
     }
+    const avatarServices = [
+      "https://avatars.dicebear.com/api/avataars/",
+      "https://robohash.org/",
+      "https://api.multiavatar.com/",
+    ];
     
+    const getConsistentAvatar = (username) => {
+      // Generate a consistent index based on the username
+      const index = username.charCodeAt(0) % avatarServices.length;
+      const selectedService = avatarServices[index];
+      return `${selectedService}${encodeURIComponent(username)}.png`;
+    };
+    
+
   return (
   <div className=" ">
     <header className="dark:border-gray-700 h-20 fixed w-full dark:bg-gray-800 py-5 shdow flex justify-around items-center">
@@ -140,7 +153,7 @@ const ChatPage = () => {
               <div className="flex flex-row gap-2">
                 <img
                   className="h-10 w-10"
-                  src={"https://avatar.iran.liara.run/public/43"}
+                  img src={getConsistentAvatar(currentUser)}
                   alt=""
                 />
                 <div className="flex flex-col gap-1">
