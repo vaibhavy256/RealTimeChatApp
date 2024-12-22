@@ -6,7 +6,7 @@ export const createRoomAPi = async (roomId, userName) => {
 };
 
 export const joinRoomApi=async(roomId,userName) => {
-    const response =await httpClient.patch(`/api/join/${roomId}/${userName}`);
+    const response =await httpClient.post(`/api/join/${roomId}/${userName}`);
     return response.data;
 }
 

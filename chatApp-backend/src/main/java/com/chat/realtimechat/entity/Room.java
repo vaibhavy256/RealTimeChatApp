@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static jakarta.persistence.FetchType.EAGER;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -20,10 +22,11 @@ public class Room {
     private Long id;
 
     private String roomId;
+
     @ElementCollection
     private List<String> userName = new ArrayList<>();
 
-    @ElementCollection
+    @OneToMany(mappedBy = "room",fetch = FetchType.EAGER)
     private List<Messages> messages=new ArrayList<>();
 
 

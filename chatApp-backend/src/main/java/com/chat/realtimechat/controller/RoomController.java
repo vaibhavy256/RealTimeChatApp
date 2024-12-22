@@ -26,18 +26,14 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(room);
     }
 
-    @PatchMapping("/join/{roomId}/{userName}")
+    @PostMapping("/join/{roomId}/{userName}")
     public ResponseEntity<?> joinRoom(@PathVariable String roomId, @PathVariable String userName) {
         Room room = roomService.joinRoom(roomId, userName);
         if (room == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Room with " + roomId + " not Exists");
+                    .body("Room with ID " + roomId + " does not exist");
         }
-//        if (room.getUserNames().contains(userName)) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT)
-//                    .body("User " + userName + " is already in the room");
-//        }
-        return ResponseEntity.status(HttpStatus.OK).body(room.getUserNames());
+        return ResponseEntity.status(HttpStatus.OK).body(room.getUserNames());// Return the updated messages
     }
 
     @GetMapping("/messages/{roomId}")

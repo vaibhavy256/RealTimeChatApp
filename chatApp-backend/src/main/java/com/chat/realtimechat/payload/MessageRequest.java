@@ -19,7 +19,7 @@ public class MessageRequest {
         this.content = content;
         this.sender = sender;
         this.roomId = roomId;
-        this.messageTime = messageTime;
+
     }
 
     public String getContent() {

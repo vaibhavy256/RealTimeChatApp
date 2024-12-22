@@ -7,42 +7,24 @@ import { Stomp } from "@stomp/stompjs";
 import toast from "react-hot-toast";
 import {baseURL} from "../config/AxiosHelper"
 import { useNavigate } from "react-router";
+import { CgUserRemove } from "react-icons/cg";
 
 
 const ChatPage = () => {
-    const{roomId, currentUser,connected}=useChatContext();
-    console.log(roomId);
-    console.log(connected);
-    console.log(currentUser);
-
+    const{roomId, currentUser,connected,setConnected,
+      setRoomId,
+      setCurrentUser,}=useChatContext();
     const navigate = useNavigate();
     useEffect(()=>{
       if(!connected){
         navigate("/"); 
       }
     },[connected, roomId,currentUser]);
-    const [messages, setMessages]=useState([
-        {
-            content: "Hello",
-            sender:"vaibhav"
-        },
-        {
-            content: "Hello",
-            sender:"vaibhav y"
-        },
-        {
-          content: "Hello",
-          sender:"vaibhav y"
-      }
-  
-    
-    ]);
+    const [messages, setMessages]=useState([]);
     const [input,setInput]=useState("");
     const inputRef=useRef(null)
     const chatBoxRef=useRef(null)
     const [stompClient, setStompClient]=useState(null);
-
-
     //page init
     //need to load the messages 
 
@@ -53,17 +35,16 @@ const ChatPage = () => {
         const sock=new SockJS(`${baseURL}/chat`);
         const client=Stomp.over(sock);
         client.connect({},()=>{
-
           setStompClient(client);
-
           toast.success("connected");
+
           client.subscribe(`/topic/room/${roomId}`,(message)=>{
           console.log(message);
           const newMessage=JSON.parse(message.body);
           setMessages((prev)=> [...prev,newMessage]);
           });
         });
-      }
+      };
       if (connected) {
         connectWebSocket();
       }
@@ -75,8 +56,15 @@ const ChatPage = () => {
       //when you are connected and stompClient is there 
       if(stompClient && connected && input.trim()){
         console.log(input)
+        const message={
+          sender:currentUser,
+          content:input,
+          roomId:roomId,
+        };
+        stompClient.send(`/app/sendMessage/${roomId}`,{},JSON.stringify(message),{});
+        setInput("");
       }
-    }
+    };
 
 
     
@@ -102,18 +90,19 @@ const ChatPage = () => {
         </button>
     </div>
     </header>
-    <main className="py-20 px-10   w-2/3 dark:bg-slate-600 mx-auto h-screen overflow-auto ">
-        {
-            messages.map((messages,index)=>(
-                <div
+    <main 
+      ref={chatBoxRef}
+      className="py-20 px-10   w-2/3 dark:bg-slate-600 mx-auto h-screen overflow-auto ">
+        {messages.map((message,index)=>(
+            <div
             key={index}
             className={`flex ${
-              messages.sender === currentUser ? "justify-end" : "justify-start"
-            } `}
+              message.sender === currentUser ? "justify-end" : "justify-start"
+            }`}
           >
             <div
               className={`my-2 ${
-                messages.sender === currentUser ? "bg-orange-700" : "bg-violet-900"
+                message.sender === currentUser ? "bg-orange-700" : "bg-violet-900"
               } p-2 max-w-xs rounded`}
             >
               <div className="flex flex-row gap-2">
@@ -123,14 +112,13 @@ const ChatPage = () => {
                   alt=""
                 />
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm font-bold">{messages.sender}</p>
-                  <p>{messages.content}</p>
+                  <p className="text-sm font-bold">{message.sender}</p>
+                  <p>{message.content}</p>
                 </div>
               </div>
             </div>
           </div>
-            ))
-        }
+            ))}
     </main>
     
 

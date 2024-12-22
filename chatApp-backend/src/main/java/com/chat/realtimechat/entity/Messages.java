@@ -1,29 +1,36 @@
 package com.chat.realtimechat.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.spi.LocaleNameProvider;
-
 
 @Entity
 public class Messages {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     private String content;
     private String sender;
     private LocalDateTime timeStamp;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
+
     public Messages(String content, String sender) {
         this.content = content;
         this.sender = sender;
         this.timeStamp= LocalDateTime.now();
+    }
+
+    public Messages(Long id, String content, String sender, LocalDateTime timeStamp, Room room) {
+        this.id = id;
+        this.content = content;
+        this.sender = sender;
+        this.timeStamp = timeStamp;
+        this.room = room;
     }
 
     public Messages() {

@@ -1,8 +1,11 @@
 package com.chat.realtimechat.service;
 
+import com.chat.realtimechat.entity.Messages;
 import com.chat.realtimechat.entity.Room;
 import com.chat.realtimechat.repository.RoomRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.message.Message;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +36,29 @@ public class RoomService {
         return roomRepository.save(newRoom);
     }
 
-    public Room joinRoom(String roomId,String userName){
-            Room room=roomRepository.findByRoomId(roomId);
-            if (room==null){
-                logger.warn("Room with ID {} does not exists",roomId);
-                return null;
-            }
-//            if (room.getUserNames().contains(userName)) {
-//                logger.info("User {} is already in the room {}", userName, roomId);
-//                return room; // Return the room without saving it again
-//            }
+    
+    public Room joinRoom(String roomId, String userName) {
+        // Fetch the room by its ID
+        Room room = roomRepository.findByRoomId(roomId);
+        if (room == null) {
+            logger.warn("Room with ID {} does not exist", roomId);
+            return null;
+        }
+
+        // Check if the user is already part of the room
+        if (!room.getUserNames().contains(userName)) {
+            // User is not in the room; add them and save the room
             room.addUser(userName);
-            return roomRepository.save(room);
+            roomRepository.save(room);
+            logger.info("User {} added to room {}", userName, roomId);
+        } else {
+            // User is already in the room; just log the event
+            logger.info("User {} is already in room {}", userName, roomId);
+        }
+
+        return room; // Return the room object
     }
+
 
     public Room getMessages(String roomId){
         Room room=roomRepository.findByRoomId(roomId);
