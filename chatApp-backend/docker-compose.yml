@@ -2,13 +2,12 @@ version: '3.8'
 
 services:
   app:
-    image: room_chat_app:0.0.1
+    image: room_chat_app:latest
     build:
       context: .
       dockerfile: Dockerfile
-
     environment:
-      SPRING_DATASOURCE_URI: jdbc:mysql://db:3306/chatApp
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/chatApp
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     ports:
@@ -19,11 +18,10 @@ services:
   db:
     image: mysql:8.0.27
     environment:
-      DATABASE_HOST: docker-mysql
-      DATABASE_PORT: 3306
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: chatApp
       MYSQL_USER: root
       MYSQL_PASSWORD: root
-
+    ports:
+      - 3307:3306
 
