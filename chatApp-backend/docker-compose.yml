@@ -4,10 +4,10 @@ services:
   app:
     image: room_chat_app:0.0.1
     build:
-      context: .
+      context: ./
       dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - 8081:8081
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/chatApp
       SPRING_DATASOURCE_USERNAME: admin
