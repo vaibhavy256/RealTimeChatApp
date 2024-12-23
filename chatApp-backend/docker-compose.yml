@@ -3,9 +3,7 @@ version: '3.8'
 services:
   app:
     image: room_chat_app:0.0.1
-    build:
-      context: G:\Project with front end\RealTimeChatApp\chatApp-backend\
-      dockerfile: Dockerfile
+    build: .
     ports:
       - 8081:8081
     environment:
