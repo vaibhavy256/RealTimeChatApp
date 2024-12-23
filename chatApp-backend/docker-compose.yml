@@ -4,7 +4,7 @@ services:
   app:
     image: room_chat_app:0.0.1
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/chatApp
+      SPRING_DATASOURCE_URI: jdbc:mysql://db:3306/chatApp
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: root
     ports:
