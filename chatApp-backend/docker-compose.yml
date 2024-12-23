@@ -24,4 +24,7 @@ services:
       MYSQL_PASSWORD: root
     ports:
       - 3307:3306
-
+    volumes:
+          - db_data:/var/lib/mysql # Persist MySQL data
+volumes:
+  db_data: # Named volume for MySQL persistence
