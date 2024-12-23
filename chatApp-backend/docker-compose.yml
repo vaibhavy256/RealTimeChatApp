@@ -4,7 +4,7 @@ services:
   app:
     image: room_chat_app:0.0.1
     build:
-      context: ./
+      context: G:\Project with front end\RealTimeChatApp\chatApp-backend\
       dockerfile: Dockerfile
     ports:
       - 8081:8081
