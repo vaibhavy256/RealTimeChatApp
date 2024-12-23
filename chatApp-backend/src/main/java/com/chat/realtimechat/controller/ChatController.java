@@ -27,7 +27,7 @@ public class ChatController {
     public Messages sendMessage(
             @DestinationVariable String roomId,
             @RequestBody MessageRequest request){
-        System.out.println(roomId+" "+request.toString());
+
         Room room=roomRepository.findByRoomId(roomId);
         System.out.println(room);
         Messages messages=new Messages();
