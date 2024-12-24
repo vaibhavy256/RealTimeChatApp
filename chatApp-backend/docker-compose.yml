@@ -3,6 +3,7 @@ version: '3.8'
 services:
   app:
     image: room_chat_app:latest
+    container_name: room_chat_app
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,7 +17,8 @@ services:
       - db
 
   db:
-    image: mysql:8.0.27
+    image: mysql:8
+    container_name: mysql_db_docker
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: chatApp
