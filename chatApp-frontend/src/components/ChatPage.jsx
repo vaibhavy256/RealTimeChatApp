@@ -29,18 +29,23 @@ const ChatPage = () => {
     //need to load the messages 
     useEffect(()=>{
      async function loadMessages(){
-      try{
-        const messages=await getMessagesApi(roomId);
-        setMessages(messages);
-      }
-      catch(error){
-
+      try {
+        const messages = await getMessagesApi(roomId);
+        // Ensure fetchedMessages is an array before setting it
+        if (Array.isArray(messages)) {
+          setMessages(messages);
+        } else {
+          console.warn("Fetched data is not an array:", messages);
+          setMessages([]); // Default to an empty array if not an array
+        }
+      } catch (error) {
+        console.error("Error fetching messages:", error);
       }
      }
      if(connected){
       loadMessages();
      }
-    },[])
+    },[roomId,connected])
 
     //scroll down
     useEffect(()=>{
@@ -62,17 +67,23 @@ const ChatPage = () => {
           setStompClient(client);
           toast.success("connected");
 
-          client.subscribe(`/topic/room/${roomId}`,(message)=>{
-          console.log(message);
-          const newMessage=JSON.parse(message.body);
-          setMessages((prev)=> [...prev,newMessage]);
+          client.subscribe(`/topic/room/${roomId}`, (message) => {
+            try {
+              const newMessage = JSON.parse(message.body); // Parse message body
+              setMessages((prev) => [...prev, newMessage]); // Update messages state
+            } catch (error) {
+              console.error("Failed to parse message:", error);
+            }
           });
+        }, (error) => {
+          toast.error("Failed to connect to WebSocket");
+          console.error("WebSocket connection error:", error);
         });
       };
       if (connected) {
         connectWebSocket();
       }
-    },[roomId]);
+    },[roomId,connected]);
 
 
     //send message handle
